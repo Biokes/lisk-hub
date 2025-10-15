@@ -32,7 +32,7 @@ TDD Spec
 1. GameToken
 
 - deploys with name/symbol/decimals
-- mint onlyOwner, cannot exceed cap (if capped)
+- mint anyone, cannot exceed cap
 - burn reduces totalSupply
 - fuzz: transfer invariants and event emission
 
@@ -89,6 +89,10 @@ Scripts
 - npx hardhat test
 - npx hardhat coverage
 - npx hardhat deploy --network liskTestnet
+  or
+  forge test
+  forge coverage
+  forge script --rpc-url liskTestnet
 
 Acceptance Criteria
 
