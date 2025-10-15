@@ -1,0 +1,81 @@
+# apps/web (Frontend)
+
+Goal
+
+- Player lobby, deposits, gameplay UI, balances/history, admin panel.
+
+Tech
+
+- React + Next.js, Ethers/Viem, Wagmi/RainbowKit, Socket.io client.
+
+Environment
+
+- NEXT_PUBLIC_LISK_RPC_URL=
+- NEXT_PUBLIC_NETWORK_CHAIN_ID=
+- NEXT_PUBLIC_CONTRACTS_JSON= (addresses/ABIs or served by sdk)
+- NEXT_PUBLIC_BACKEND_WS_URL=
+- NEXT_PUBLIC_BACKEND_HTTP_URL=
+
+TDD Plan
+
+1. Wallet + Network
+
+- should render Connect button
+- should connect wallet and display address
+- should prompt to switch to Lisk L2 if on wrong chain
+- should show token balance after connect
+
+2. Game Hub (GameHub.getGames)
+
+- should list registered games with names
+- should render game details (rules, min deposit, fee notice)
+- should refresh live player count via WS
+
+3. Deposit Flow (GameVault.deposit)
+
+- should require token approval and show allowance state
+- should calculate and display 2% fee and net deposit
+- should submit deposit tx and show receipt link
+- should emit and render PlayerDeposited event in UI
+
+4. Balances
+
+- should show per-game balance (locked vs available)
+- should update balances after deposit/settlement
+
+5. Ping-Pong UI
+
+- should open WS room and render opponent presence
+- should handle start/pause/disconnect states
+- should display final score and “awaiting settlement”
+
+6. Settlement Feedback
+
+- should subscribe to WinnerSettled event and update balance
+- should show success state with tx hash
+
+7. Admin Panel
+
+- should restrict admin routes by address
+- should add/remove game via GameHub
+- should display DAO treasury balance
+
+Test setup
+
+- Mock contracts via wagmi-mock or msw + viem’s publicClient mock
+- Component tests: React Testing Library + Jest/Vitest
+- E2E (optional): Playwright
+
+Scripts
+
+- npm run dev
+- npm run test
+- npm run test:e2e
+- npm run lint
+- npm run build
+
+Acceptance Criteria
+
+- Deposits show exact fee math and confirm on-chain
+- Live updates via WS for room/opponent/settlement
+- Admin-only actions guarded and reflected on-chain

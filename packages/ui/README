@@ -1,0 +1,31 @@
+# packages/ui (Shared UI)
+
+Goal
+
+- Reusable UI components for wallet, staking, DAO, and game widgets.
+
+Components (initial)
+
+- WalletConnectButton
+- StakeWidget (approve + deposit + feedback)
+- DaoProposalList (placeholder for future)
+- DaoCreateProposalForm (placeholder)
+
+TDD Plan
+
+- Storybook stories for all components
+- Snapshot tests stay stable
+- Accessibility: components have roles/labels and pass axe checks
+- State contracts via props; no blockchain logic here
+
+Scripts
+
+- npm run storybook
+- npm run test
+- npm run lint
+- npm run build
+
+Acceptance Criteria
+
+- Components render with mock props and match stories
+- Zero a11y violations in stories

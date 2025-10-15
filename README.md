@@ -1,2 +1,0 @@
-# lisk-hub
-A repository

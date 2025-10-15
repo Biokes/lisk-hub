@@ -1,0 +1,23 @@
+# configs (Tooling)
+
+Goal
+
+- Shared configuration for linting, formatting, TS base config, and commit conventions.
+
+Includes
+
+- .eslintrc.json: Base eslint (TS + React), import/order rules
+- .prettierrc: Formatting rules
+- commitlint.config.js: Conventional commits
+- tsconfig.base.json: Path aliases and TS strict mode
+
+TDD/Validation
+
+- Lint task ensures no unused vars/imports and consistent style
+- Prettier check as part of CI
+- Type-check: each workspace extends tsconfig.base.json and builds cleanly
+
+Usage
+
+- Extend these configs in apps and packages
+- CI already runs lint/build via main.yaml
