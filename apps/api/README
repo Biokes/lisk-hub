@@ -1,0 +1,83 @@
+# apps/api (Backend)
+
+Goal
+
+- Run games off-chain (Ping-Pong), manage matchmaking, compute winners, call on-chain settlement, and persist history.
+
+Tech
+
+- Node.js (Express/Fastify), Socket.io, Ethers/Viem, PostgreSQL or MongoDB, BullMQ/Agenda for jobs.
+
+Environment
+
+- LISK_RPC_URL=
+- ADMIN_PRIVATE_KEY=
+- GAME_HUB_ADDRESS=
+- GAME_VAULT_ADDRESS=
+- SETTLEMENT_ADDRESS=
+- DATABASE_URL=
+- SETTLEMENT_CHECK_INTERVAL=30000
+
+Services
+
+- WS Gateway: matchmaking, rooms, game ticks
+- REST API: health, player/game endpoints, admin actions
+- Settlement Worker: idempotent winner settlement and retries
+- Indexer: subscribes to contract events for history sync
+
+TDD Plan
+
+1. Health
+
+- GET /health returns { ok: true }
+
+2. Matchmaking (Ping-Pong)
+
+- POST /games/pingpong/match → creates/join match
+- WS: “join_room” pairs two players; emits “ready”
+- should timeout unmatched players and cleanup rooms
+
+3. Gameplay
+
+- WS: “state_update” accepted at fixed tick; server authoritative
+- should compute score, detect end-of-game conditions
+- prevents cheating (rate limiting, validation)
+
+4. Settlement
+
+- When match ends, compute prize and call SettleWinner:
+  - should sign and send tx from admin key
+  - should be idempotent by matchId (no duplicate payouts)
+  - retries on nonce errors/transient RPC failures
+  - logs tx hash and persists settlement record
+
+5. Security
+
+- Admin-only routes require ADMIN address
+- EIP-155 replay-safe chain id, nonce mgmt in signer
+- Input validation and schema checks
+
+6. Persistence
+
+- Schema: players, matches, match_events, settlements
+- should write match lifecycle and outcomes
+- should reconcile on-chain events to local state
+
+Tests
+
+- Unit: services (matchmaking, scoring, settlement)
+- Integration: in-memory DB + mocked RPC
+- Contract-integration: against local Hardhat node
+
+Scripts
+
+- npm run dev
+- npm run test
+- npm run lint
+- npm run start
+
+Acceptance Criteria
+
+- A full match produces one on-chain settlement with correct prize
+- No duplicate settlement for same matchId
+- System recovers from restarts and resumes pending settlements

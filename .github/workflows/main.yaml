@@ -1,10 +1,63 @@
+name: CI
+
 on:
   push:
-    branches: 
+    branches:
       - main
       - dev
+  pull_request:
 
 jobs:
   build:
-    runs-on:
-            
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Verify unwanted files are not committed
+        run: |
+          echo "Checking for disallowed files..."
+          disallowed_patterns=("node_modules" ".env" "dist" "build" ".next" "coverage")
+          for pattern in "${disallowed_patterns[@]}"; do
+            if git ls-files | grep -q "$pattern"; then
+              echo "Error: '$pattern' directory or file is committed to the repo."
+              echo "Please remove it and add it to .gitignore."
+              exit 1
+            fi
+          done
+          echo "No unwanted files committed."
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
+
+      - name: Run ESLint
+        run: |
+          if [ -f package.json ]; then
+            npm run lint --if-present || (echo "Linting failed!" && exit 1)
+          else
+            echo "No package.json found; skipping lint."
+          fi
+
+      - name: Build project
+        run: |
+          if [ -f package.json ]; then
+            npm run build --if-present
+          else
+            echo "No package.json found; No build script; skipping."
+          fi
+
+      - name: Upload repo files (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-snapshot
+          path: ./**

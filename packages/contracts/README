@@ -1,0 +1,97 @@
+# packages/contracts (Solidity)
+
+Goal
+
+- Implement PRD contracts with events, access control, and safe token handling.
+
+Contracts
+
+- GameToken.sol (ERC20)
+- DAOTreasury.sol
+- GameVault.sol
+- GameHub.sol
+- GameSettlement.sol
+- Interfaces + Libraries
+
+Tooling
+
+- Hardhat (default) or Foundry
+- OpenZeppelin contracts
+- Slither/Forge for static analysis (optional)
+
+Events (Appendix B)
+
+- PlayerDeposited(address player, address game, uint256 amount)
+- FeeCollected(uint256 amount, address game)
+- WinnerSettled(address player, address game, uint256 amount)
+- GameAdded(address gameAddress, string gameName)
+- GameRemoved(address gameAddress)
+
+TDD Spec
+
+1. GameToken
+
+- deploys with name/symbol/decimals
+- mint onlyOwner, cannot exceed cap (if capped)
+- burn reduces totalSupply
+- fuzz: transfer invariants and event emission
+
+2. DAOTreasury
+
+- depositFee increments balance and logs record
+- getTreasuryBalance returns sum
+- withdrawFunds onlyOwner (placeholder for future DAO)
+- reverts on insufficient funds
+
+3. GameHub
+
+- addGame onlyAdmin; cannot add zero or duplicate
+- removeGame onlyAdmin; marks inactive
+- getGames returns active list
+- getGameDetails returns name/status
+
+4. GameVault
+
+- deposit(game, amount): requires allowance, fee=2%
+- fee sent to DAOTreasury immediately
+- updates playerBalances[player][game]
+- reentrancy guard; SafeERC20 transfers
+- only registered games accepted (via GameHub)
+- getBalance returns per-game balance
+- settleGame onlySettlement/onlyAdmin:
+  - pays prize to winner
+  - decreases total pot accordingly
+  - emits WinnerSettled
+
+5. GameSettlement
+
+- settleWinner(game, winner, amount) onlyAdmin
+- calls vault.settleGame and records settlement
+- stores settlementRecords with matchId/nonce
+- rejects replay by nonce or matchId
+
+Edge Cases
+
+- fee rounding with token decimals (floor recommended)
+- zero-amount deposits revert
+- unsupported token addresses
+- paused state halts deposits/settlements
+
+Tests
+
+- Unit tests per contract
+- Integration: deposit x2 → settle → balances/fees correct
+- Invariant: no funds lost (Vault + Treasury conservation)
+- Event filters: topics match UI expectations
+
+Scripts
+
+- npx hardhat test
+- npx hardhat coverage
+- npx hardhat deploy --network liskTestnet
+
+Acceptance Criteria
+
+- 2% fee exact math, treasury balance matches
+- Only registered games can receive deposits/settlements
+- Settlement idempotency and access control enforced

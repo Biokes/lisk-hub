@@ -1,0 +1,53 @@
+# packages/sdk (TypeScript SDK)
+
+Goal
+
+- Typed helpers to interact with deployed contracts from web and backend.
+
+Contents
+
+- abis/: JSON ABIs
+- config/networks.ts: chain RPC, chainId, explorers
+- utils/addresses.ts: per-network contract addresses
+- contracts.ts: typed factories/clients (ethers or viem)
+- index.ts: public API
+
+TDD Plan
+
+1. Config
+
+- should resolve chain config by env/network name
+- should validate required addresses at runtime
+
+2. Providers/Signers
+
+- should create read-only provider from RPC URL
+- should create signer from private key (backend)
+
+3. Contracts
+
+- getGameHub/getGameVault/getSettlement/getToken
+- methods return strongly typed clients
+- retries on transient RPC errors
+
+4. Helpers
+
+- approveIfNeeded(token, spender, amount)
+- feeMath(amount): net + fee with rounding rules
+- waitForTx(txHash, timeout)
+
+Tests
+
+- Unit: mock provider/signers and assert calls
+- Integration: against local Hardhat node + sample deployments
+
+Scripts
+
+- npm run build
+- npm run test
+- npm run lint
+
+Acceptance Criteria
+
+- Frontend can list games and deposit with one-liners
+- Backend can call settleWinner with idempotent helper
