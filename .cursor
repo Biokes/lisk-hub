@@ -1,0 +1,972 @@
+this is my PRD
+
+Lisk Gaming Hub - Product Requirements Document
+Project Name: Lisk Gaming Hub
+Status: Development Phase
+________________________________________
+1. Executive Summary
+Lisk Gaming Hub is a multi-game gaming platform deployed on the Lisk L2 blockchain that enables players to stake tokens across different games (both on-chain and off-chain) through a unified hub. The platform features a shared staking contract, decentralized fee collection for a DAO treasury, and permissioned game management. Winners are determined through backend settlement and receive their winnings automatically.
+Key Value Propositions:
+•	Single entry point for multiple gaming experiences
+•	Unified wallet connection and asset tracking
+•	Transparent, blockchain-verified payouts
+•	Low transaction costs on Lisk L2
+•	Scalable architecture for future game additions
+________________________________________
+2. Product Vision & Goals
+2.1 Vision
+Create a decentralized gaming hub where players can discover and participate in various games with guaranteed, transparent payouts through smart contracts.
+2.2 Goals
+Primary Goals:
+1.	Launch a functional gaming hub with at least 2 games (Ping-Pong off-chain, Poker on-chain settlement)
+2.	Establish a sustainable fee model (2% to DAO treasury)
+3.	Build trust through transparent, auditable smart contracts
+4.	Enable seamless wallet integration for asset management
+Secondary Goals:
+1.	Create a scalable architecture for adding new games
+2.	Build community governance framework (DAO treasury)
+3.	Prepare for NFT integration in future phases
+4.	Establish brand presence in the Lisk ecosystem
+________________________________________
+3. User Stories & Use Cases
+3.1 Player User Stories
+US-001: Player Discovery & Registration
+•	As a player, I want to browse available games in the hub so I can choose what to play
+•	As a player, I want to connect my wallet so I can manage my assets and play
+US-002: Game Staking
+•	As a player, I want to deposit tokens into a specific game so I can participate
+•	As a player, I want to see my deposited balance for each game
+•	As a player, I want to withdraw my available balance if I haven't played yet
+US-003: Gameplay & Participation
+•	As a player, I want to play games (Ping-Pong or Poker) against other players
+•	As a player, I want to see real-time game status and opponents
+•	As a player, I want transparent information about how winners are determined
+US-004: Winnings & Payouts
+•	As a player, I want to receive my winnings automatically after a game concludes
+•	As a player, I want to see a history of my games and earnings
+•	As a player, I want to understand the 2% fee structure upfront
+3.2 Admin User Stories
+US-101: Game Management
+•	As the admin, I want to add new games to the hub so the platform can grow
+•	As the admin, I want to remove or pause games if needed
+•	As the admin, I want to see all active games and their players
+US-102: Platform Oversight
+•	As the admin, I want to monitor fee collection and DAO treasury balance
+•	As the admin, I want to settle games and verify winners through backend calls
+•	As the admin, I want to have access controls ensuring only I can manage games
+________________________________________
+4. Core Features
+4.1 Feature Breakdown
+Feature 1: Game Hub Dashboard
+•	Browse all available games
+•	View game descriptions, rules, and current player count
+•	See deposit requirements and fee structure
+•	Real-time game status updates
+Feature 2: Wallet Integration
+•	Connect wallet (MetaMask, Ledger, etc.)
+•	Display wallet address and balance
+•	Show token balance across all games
+•	Track available and locked funds
+Feature 3: Game Deposit System
+•	Deposit tokens into specific games
+•	Per-game deposit contracts for isolation
+•	Immediate 2% fee deduction at deposit time
+•	Confirmation of deposit and fee payment
+Feature 4: In-Game Participation
+•	Play Ping-Pong (off-chain matchmaking)
+•	Play Poker (off-chain logic, on-chain settlement)
+•	Real-time multiplayer interaction
+•	Game history and stats tracking
+Feature 5: Winner Settlement & Payouts
+•	Backend processes game outcomes
+•	Smart contract distributes winnings
+•	Automatic fund transfers to winners
+•	Transaction receipts and history
+Feature 6: Admin Panel
+•	Add/remove games (admin only)
+•	View all games and players
+•	Monitor DAO treasury balance
+•	Trigger settlement processes
+•	System analytics and metrics
+Feature 7: DAO Treasury Management
+•	Accumulate 2% fees from all games
+•	Transparent fee tracking
+•	Foundation for future governance
+________________________________________
+5. Technical Architecture
+5.1 Smart Contract Structure
+5.1.1 GameHub.sol
+•	Purpose: Central registry for all games
+•	Key Functions: 
+o	addGame(address gameAddress, string gameName) - Admin only
+o	removeGame(address gameAddress) - Admin only
+o	getGames() - Public view to fetch all games
+o	getGameDetails(address gameAddress) - Fetch specific game info
+•	State Variables: 
+o	games[] - Array of game addresses
+o	gameNames - Mapping of game address to name
+o	admin - Admin address (deployer)
+5.1.2 GameVault.sol
+•	Purpose: Shared staking and fund management contract
+•	Key Functions: 
+o	deposit(address gameAddress, uint256 amount) - Players deposit tokens
+o	getBalance(address player, address gameAddress) - View player balance per game
+o	settleGame(address gameAddress, address winner, uint256 amount) - Backend settlement (admin only)
+o	withdrawFees() - Transfer accumulated fees to DAO Treasury (admin only)
+•	Fee Logic: 
+o	2% fee deducted at deposit time
+o	Fee immediately transferred to DAOTreasury.sol
+o	Winner receives remaining pot
+•	State Variables: 
+o	playerBalances - Mapping of player → game → balance
+o	accumulatedFees - Total fees collected
+o	erc20Token - Reference to ERC20 token contract
+o	daoTreasury - DAO treasury address
+5.1.3 GameSettlement.sol
+•	Purpose: Backend settlement orchestrator
+•	Key Functions: 
+o	settleWinner(address gameAddress, address winner, uint256 prizeAmount) - Called by backend (admin only)
+o	getSettlementHistory(address gameAddress) - View settlement records
+•	State Variables: 
+o	settlementRecords - Array of settlement events
+o	vaultAddress - Reference to GameVault contract
+o	admin - Admin address
+5.1.4 GameToken.sol (ERC20)
+•	Purpose: Native ERC20 token for staking
+•	Standard ERC20 Implementation
+•	Additional Functions: 
+o	mint(address to, uint256 amount) - Admin minting for development/production
+o	burn(uint256 amount) - Token burning capability
+•	Total Supply: Configurable (100M recommended as starting point)
+5.1.5 DAOTreasury.sol
+•	Purpose: DAO fee accumulator
+•	Key Functions: 
+o	depositFee(uint256 amount) - Called by GameVault
+o	getTreasuryBalance() - View current treasury balance
+o	withdrawFunds(address recipient, uint256 amount) - Future DAO governance
+•	State Variables: 
+o	treasuryBalance - Total fees accumulated
+o	feeHistory - Record of all fee deposits
+5.2 Data Flow Diagram
+Player → Connect Wallet → Browse Games → Select Game
+                                              ↓
+                                         Deposit Tokens
+                                              ↓
+                              GameVault.deposit() called
+                                    ↓ (2% fee deducted)
+                              DAOTreasury receives 2%
+                                    ↓
+                              Player enters game pot (98%)
+                                              ↓
+                                         Play Game
+                                              ↓
+                                    Backend Processes
+                                         Result
+                                              ↓
+                              Backend calls
+                         GameSettlement.settleWinner()
+                                              ↓
+                         GameVault distributes prize
+                                              ↓
+                              Winner receives payout
+5.3 Technology Stack
+Component	Technology	Notes
+Blockchain	Lisk L2 (OP Stack)	EVM compatible, low-cost transactions
+Smart Contracts	Solidity 0.8.x	Standard EVM contracts
+Token Standard	ERC20	For staking and rewards
+Frontend	React + Web3.js/Ethers.js	Web3 wallet integration
+Backend	Node.js + Express	Game settlement orchestration
+Database	PostgreSQL/MongoDB	Game history, player stats
+Real-time	WebSockets/Socket.io	Live game updates
+Deployment	Hardhat/Foundry	Contract compilation and deployment
+________________________________________
+6. Games Specification
+6.1 Game 1: Ping-Pong (Off-Chain)
+Game Type: Off-chain multiplayer
+Settlement: Backend-verified
+Core Mechanics:
+•	Two players compete in a virtual Ping-Pong match
+•	Best of 3 or single match (configurable)
+•	Real-time gameplay via WebSockets
+•	Backend tracks score and determines winner
+Win Conditions:
+•	First to X points wins (e.g., 21 points)
+•	In tournament format: First to win 2 matches
+Backend Settlement:
+•	Backend records final score
+•	Calls GameSettlement.settleWinner() with winner address
+•	Winnings distributed automatically
+Player Experience:
+•	Deposit tokens for Ping-Pong game
+•	Find opponent (matchmaking or direct challenge)
+•	Play game in real-time UI
+•	View results and receive payout within seconds
+6.2 Game 2: Poker (On-Chain Settlement, Off-Chain Logic)
+Game Type: Off-chain logic, on-chain settlement
+Settlement: Backend-verified with on-chain payouts
+Core Mechanics:
+•	Texas Hold'em poker format
+•	Multiple players (2-8 per table)
+•	Off-chain card dealing and game state management
+•	Backend verifies hand rankings and pot distribution
+Win Conditions:
+•	Last player remaining (all others fold)
+•	Best hand at showdown
+Backend Settlement:
+•	Backend manages all game logic
+•	Calculates pot distribution
+•	Determines winner(s) and prize split
+•	Calls GameSettlement.settleWinner() for each payout
+•	On-chain transaction creates immutable record
+Player Experience:
+•	Deposit tokens for Poker game
+•	Join poker table (matchmaking or create table)
+•	Receive hole cards via secure backend transmission
+•	Play rounds with other players
+•	Backend calculates and settles winnings on-chain
+•	Winner receives payout confirmed by blockchain
+Security Considerations:
+•	Card dealing must be non-deterministic and verified
+•	Player communications encrypted (WebSockets + TLS)
+•	Backend implements timeout mechanisms to prevent stuck games
+•	Player balances locked until settlement complete
+________________________________________
+7. Fee Structure & Economics
+7.1 Fee Model
+Deposit Fee:
+•	Amount: 2% of deposit amount
+•	Timing: Deducted immediately at deposit time
+•	Recipient: DAOTreasury.sol
+•	Example: Player deposits 100 tokens → 2 tokens to DAO, 98 tokens in game pot
+No Other Fees:
+•	No withdrawal fees
+•	No transaction fees (handled by Lisk L2 cost)
+•	No payout fees
+7.2 Token Economics
+Initial Token Distribution:
+•	Development phase: Minted for testing
+•	Production phase: Minted for mainnet launch
+•	Future: Mint rate determined by DAO governance
+Supply Cap: Configurable (recommend 100M tokens initially)
+Token Uses:
+•	Staking in games
+•	Future: DAO governance
+•	Future: NFT minting
+•	Future: Liquidity incentives
+________________________________________
+8. User Journeys
+8.1 New Player Journey
+1. Landing Page
+   ↓
+2. Connect Wallet (MetaMask/Ledger)
+   ↓
+3. Browse Games Dashboard
+   ↓
+4. Select Game (Ping-Pong or Poker)
+   ↓
+5. View Game Details & Rules
+   ↓
+6. Deposit Tokens
+   - Enter amount
+   - Confirm 2% fee
+   - Sign transaction
+   ↓
+7. Enter Game
+   - Find opponent/table
+   - Play game
+   ↓
+8. Receive Payout
+   - Backend settles winner
+   - On-chain transaction
+   - Funds received in wallet
+   ↓
+9. Play Again or Withdraw
+8.2 Admin Journey
+1. Admin Login
+   ↓
+2. Admin Dashboard
+   - View all games
+   - View all players
+   - Monitor treasury
+   ↓
+3. Add New Game
+   - Deploy game contract
+   - Register in GameHub
+   ↓
+4. Monitor Games
+   - View active players
+   - Check for issues
+   ↓
+5. Settle Games
+   - Backend processes results
+   - Call settlement contract
+   - Trigger payouts
+   ↓
+6. Manage Treasury
+   - View fee accumulation
+   - Prepare for governance
+________________________________________
+9. Deployment & Operations
+9.1 Deployment Process
+Phase 1: Development (Testnet)
+1.	Deploy contracts to Lisk testnet
+2.	Deploy ERC20 token
+3.	Mint test tokens
+4.	Setup DAO Treasury
+5.	Deploy frontend to testnet
+6.	Beta testing with internal users
+Phase 2: Production (Mainnet)
+1.	Security audit of smart contracts
+2.	Deploy contracts to Lisk mainnet
+3.	Deploy ERC20 token to mainnet
+4.	Mint initial production supply
+5.	Setup DAO Treasury mainnet
+6.	Deploy frontend to production
+7.	Launch public beta
+9.2 Contract Deployment Order
+1.	GameToken.sol - Deploy first (ERC20)
+2.	DAOTreasury.sol - Deploy second (receives fees)
+3.	GameVault.sol - Deploy third (references token and treasury)
+4.	GameHub.sol - Deploy fourth (game registry)
+5.	GameSettlement.sol - Deploy last (references vault and hub)
+9.3 Operations & Monitoring
+Backend Settlement Service:
+•	Node.js service running on VPS/Cloud
+•	Monitors game outcomes every 10-30 seconds
+•	Calls settlement contract with verified winner
+•	Logs all transactions
+•	Error handling and retry logic
+Monitoring & Alerts:
+•	Contract balance monitoring
+•	Failed settlement detection
+•	Player complaint triage
+•	DAO treasury tracking
+________________________________________
+10. Security Considerations
+10.1 Smart Contract Security
+Access Control:
+•	Admin-only functions protected by onlyAdmin modifier
+•	GameVault only accepts calls from authorized sources
+•	Settlement contract callable only by admin
+Token Security:
+•	Standard ERC20 with overflow protection (Solidity 0.8.x)
+•	No infinite minting
+•	Controlled supply
+Fund Safety:
+•	Separate vault contract for fund management
+•	No direct fund transfers without settlement verification
+•	DAO treasury as separate contract
+10.2 Backend Security
+Game Settlement Verification:
+•	Backend verifies game outcomes before settlement
+•	Anti-cheat mechanisms implemented
+•	Player action logging and auditing
+Communication Security:
+•	HTTPS/TLS for all API calls
+•	WebSocket secure (WSS) for game state updates
+•	Signed messages from players
+Data Security:
+•	Database encryption at rest
+•	Regular backups
+•	Access controls on sensitive data
+10.3 Future Audits
+•	Smart contract audit recommended before mainnet launch
+•	Penetration testing of backend
+•	Security review of game logic
+________________________________________
+11. Roadmap & Milestones
+Phase 1: MVP
+•	✅ Smart contracts development and testing
+•	✅ Ping-Pong game backend
+•	✅ Basic frontend (game browse, deposit, play)
+•	✅ Wallet integration
+•	✅ Deployment to Lisk testnet
+Phase 2: Enhancement
+•	✅ Poker game implementation
+•	✅ Admin panel
+•	✅ Game history and stats
+•	✅ Security audit
+•	✅ Mainnet deployment
+Phase 3: Growth
+•	⏳ Additional games (TBD)
+•	⏳ Leaderboard system
+•	⏳ Seasonal tournaments
+•	⏳ Community features
+Phase 4: Advanced Features
+•	⏳ NFT integration
+•	⏳ DAO governance
+•	⏳ Staking rewards
+•	⏳ Liquidity pools
+________________________________________
+12. Success Metrics & KPIs
+12.1 User Metrics
+•	Monthly Active Users (MAU): Target 1,000+ by month 3
+•	Total Value Staked: Track TVL across all games
+•	Average Game Duration: Optimize for engagement
+•	Retention Rate: Target 40%+ weekly retention
+12.2 Financial Metrics
+•	Total Fees Collected: Track DAO treasury growth
+•	Game Volume: Total stakes per game
+•	Average Stake Size: Monitor player bet patterns
+12.3 Technical Metrics
+•	Smart Contract Gas Usage: Optimize for cost
+•	Settlement Success Rate: Target 99.9%+
+•	Platform Uptime: Target 99.5%+
+________________________________________
+13. Risk Analysis & Mitigation
+Risk	Impact	Probability	Mitigation
+Smart contract bug	High	Medium	Audits, extensive testing, staged rollout
+Player cheat/fraud	Medium	Medium	Backend verification, action logging, disputes
+Backend downtime	High	Low	Redundancy, monitoring, failover systems
+Low adoption	High	Medium	Marketing, partnerships, game quality
+Regulatory issues	High	Low	Legal review, geographic restrictions
+Liquidity issues	Medium	Low	Reserved treasury, liquidity pools
+________________________________________
+14. Future Considerations
+14.1 Phase 2+ Features
+•	Tournaments: Multi-player brackets with tiered prizes
+•	Seasonal Passes: Battle pass style progression
+•	Marketplace: Trade game-related NFTs
+•	Social Features: Guilds, friendships, chat
+•	Mobile App: iOS/Android native apps
+•	Cross-chain: Bridge to other L2s or L1
+14.2 Governance
+•	DAO Treasury: Gradual transition to governance
+•	Token Holders: Vote on game additions, fee changes
+•	Community Events: Player-organized tournaments
+14.3 Scalability
+•	Higher Player Counts: Sharded game tables
+•	More Games: Modular game contracts
+•	Analytics: Advanced player metrics and insights
+________________________________________
+15. Glossary & Definitions
+Term	Definition
+L2	Layer 2 blockchain, scaling solution on top of Ethereum
+EVM	Ethereum Virtual Machine, compatible with Ethereum contracts
+DAO	Decentralized Autonomous Organization, governed by token holders
+Settlement	Final determination of game outcome and payout distribution
+TVL	Total Value Locked, sum of all staked tokens
+ERC20	Standard for fungible tokens on EVM blockchains
+Admin	You, the platform owner with special privileges
+Treasury	DAO contract holding accumulated fees
+________________________________________
+16. Appendices
+Appendix A: Smart Contract Interfaces
+interface IGameHub {
+    function addGame(address gameAddress, string calldata gameName) external;
+    function getGames() external view returns (address[]);
+}
+
+interface IGameVault {
+    function deposit(address gameAddress, uint256 amount) external;
+    function settleGame(address gameAddress, address winner, uint256 amount) external;
+}
+
+interface IGameSettlement {
+    function settleWinner(address gameAddress, address winner, uint256 prizeAmount) external;
+}
+
+interface IDAOTreasury {
+    function depositFee(uint256 amount) external;
+    function getTreasuryBalance() external view returns (uint256);
+}
+Appendix B: Event Logging
+All key contract actions emit events for frontend tracking:
+•	PlayerDeposited(address player, address game, uint256 amount)
+•	FeeCollected(uint256 amount, address game)
+•	WinnerSettled(address player, address game, uint256 amount)
+•	GameAdded(address gameAddress, string gameName)
+•	GameRemoved(address gameAddress)
+Appendix C: Environment Variables (Backend)
+LISK_RPC_URL=https://rpc.lisk.com
+ADMIN_PRIVATE_KEY=<your_private_key>
+GAME_HUB_ADDRESS=0x...
+GAME_VAULT_ADDRESS=0x...
+SETTLEMENT_ADDRESS=0x...
+DATABASE_URL=postgresql://...
+SETTLEMENT_CHECK_INTERVAL=30000 (ms)
+________________________________________
+Document Version: 1.0
+Last Updated: October 2025
+Next Review: After Phase 1 completion
+
+Lisk Gaming Hub - Product Requirements Document
+Project Name: Lisk Gaming Hub
+Platform: Lisk L2 (OP Stack, EVM Compatible)
+Version: 1.0
+Date: October 2025
+Status: Development Phase
+________________________________________
+1. Executive Summary
+Lisk Gaming Hub is a multi-game gaming platform deployed on the Lisk L2 blockchain that enables players to stake tokens across different games (both on-chain and off-chain) through a unified hub. The platform features a shared staking contract, decentralized fee collection for a DAO treasury, and permissioned game management. Winners are determined through backend settlement and receive their winnings automatically.
+Key Value Propositions:
+•	Single entry point for multiple gaming experiences
+•	Unified wallet connection and asset tracking
+•	Transparent, blockchain-verified payouts
+•	Low transaction costs on Lisk L2
+•	Scalable architecture for future game additions
+________________________________________
+2. Product Vision & Goals
+2.1 Vision
+Create a decentralized gaming hub where players can discover and participate in various games with guaranteed, transparent payouts through smart contracts.
+2.2 Goals
+Primary Goals:
+1.	Launch a functional gaming hub with at least 2 games (Ping-Pong off-chain, Poker on-chain settlement)
+2.	Establish a sustainable fee model (2% to DAO treasury)
+3.	Build trust through transparent, auditable smart contracts
+4.	Enable seamless wallet integration for asset management
+Secondary Goals:
+1.	Create a scalable architecture for adding new games
+2.	Build community governance framework (DAO treasury)
+3.	Prepare for NFT integration in future phases
+4.	Establish brand presence in the Lisk ecosystem
+________________________________________
+3. User Stories & Use Cases
+3.1 Player User Stories
+US-001: Player Discovery & Registration
+•	As a player, I want to browse available games in the hub so I can choose what to play
+•	As a player, I want to connect my wallet so I can manage my assets and play
+US-002: Game Staking
+•	As a player, I want to deposit tokens into a specific game so I can participate
+•	As a player, I want to see my deposited balance for each game
+•	As a player, I want to withdraw my available balance if I haven't played yet
+US-003: Gameplay & Participation
+•	As a player, I want to play games (Ping-Pong or Poker) against other players
+•	As a player, I want to see real-time game status and opponents
+•	As a player, I want transparent information about how winners are determined
+US-004: Winnings & Payouts
+•	As a player, I want to receive my winnings automatically after a game concludes
+•	As a player, I want to see a history of my games and earnings
+•	As a player, I want to understand the 2% fee structure upfront
+3.2 Admin User Stories
+US-101: Game Management
+•	As the admin, I want to add new games to the hub so the platform can grow
+•	As the admin, I want to remove or pause games if needed
+•	As the admin, I want to see all active games and their players
+US-102: Platform Oversight
+•	As the admin, I want to monitor fee collection and DAO treasury balance
+•	As the admin, I want to settle games and verify winners through backend calls
+•	As the admin, I want to have access controls ensuring only I can manage games
+________________________________________
+4. Core Features
+4.1 Feature Breakdown
+Feature 1: Game Hub Dashboard
+•	Browse all available games
+•	View game descriptions, rules, and current player count
+•	See deposit requirements and fee structure
+•	Real-time game status updates
+Feature 2: Wallet Integration
+•	Connect wallet (MetaMask, Ledger, etc.)
+•	Display wallet address and balance
+•	Show token balance across all games
+•	Track available and locked funds
+Feature 3: Game Deposit System
+•	Deposit tokens into specific games
+•	Per-game deposit contracts for isolation
+•	Immediate 2% fee deduction at deposit time
+•	Confirmation of deposit and fee payment
+Feature 4: In-Game Participation
+•	Play Ping-Pong (off-chain matchmaking)
+•	Play Poker (off-chain logic, on-chain settlement)
+•	Real-time multiplayer interaction
+•	Game history and stats tracking
+Feature 5: Winner Settlement & Payouts
+•	Backend processes game outcomes
+•	Smart contract distributes winnings
+•	Automatic fund transfers to winners
+•	Transaction receipts and history
+Feature 6: Admin Panel
+•	Add/remove games (admin only)
+•	View all games and players
+•	Monitor DAO treasury balance
+•	Trigger settlement processes
+•	System analytics and metrics
+Feature 7: DAO Treasury Management
+•	Accumulate 2% fees from all games
+•	Transparent fee tracking
+•	Foundation for future governance
+________________________________________
+5. Technical Architecture
+5.1 Smart Contract Structure
+5.1.1 GameHub.sol
+•	Purpose: Central registry for all games
+•	Key Functions: 
+o	addGame(address gameAddress, string gameName) - Admin only
+o	removeGame(address gameAddress) - Admin only
+o	getGames() - Public view to fetch all games
+o	getGameDetails(address gameAddress) - Fetch specific game info
+•	State Variables: 
+o	games[] - Array of game addresses
+o	gameNames - Mapping of game address to name
+o	admin - Admin address (deployer)
+5.1.2 GameVault.sol
+•	Purpose: Shared staking and fund management contract
+•	Key Functions: 
+o	deposit(address gameAddress, uint256 amount) - Players deposit tokens
+o	getBalance(address player, address gameAddress) - View player balance per game
+o	settleGame(address gameAddress, address winner, uint256 amount) - Backend settlement (admin only)
+o	withdrawFees() - Transfer accumulated fees to DAO Treasury (admin only)
+•	Fee Logic: 
+o	2% fee deducted at deposit time
+o	Fee immediately transferred to DAOTreasury.sol
+o	Winner receives remaining pot
+•	State Variables: 
+o	playerBalances - Mapping of player → game → balance
+o	accumulatedFees - Total fees collected
+o	erc20Token - Reference to ERC20 token contract
+o	daoTreasury - DAO treasury address
+5.1.3 GameSettlement.sol
+•	Purpose: Backend settlement orchestrator
+•	Key Functions: 
+o	settleWinner(address gameAddress, address winner, uint256 prizeAmount) - Called by backend (admin only)
+o	getSettlementHistory(address gameAddress) - View settlement records
+•	State Variables: 
+o	settlementRecords - Array of settlement events
+o	vaultAddress - Reference to GameVault contract
+o	admin - Admin address
+5.1.4 GameToken.sol (ERC20)
+•	Purpose: Native ERC20 token for staking
+•	Standard ERC20 Implementation
+•	Additional Functions: 
+o	mint(address to, uint256 amount) - Admin minting for development/production
+o	burn(uint256 amount) - Token burning capability
+•	Total Supply: Configurable (100M recommended as starting point)
+5.1.5 DAOTreasury.sol
+•	Purpose: DAO fee accumulator
+•	Key Functions: 
+o	depositFee(uint256 amount) - Called by GameVault
+o	getTreasuryBalance() - View current treasury balance
+o	withdrawFunds(address recipient, uint256 amount) - Future DAO governance
+•	State Variables: 
+o	treasuryBalance - Total fees accumulated
+o	feeHistory - Record of all fee deposits
+5.2 Data Flow Diagram
+Player → Connect Wallet → Browse Games → Select Game
+                                              ↓
+                                         Deposit Tokens
+                                              ↓
+                              GameVault.deposit() called
+                                    ↓ (2% fee deducted)
+                              DAOTreasury receives 2%
+                                    ↓
+                              Player enters game pot (98%)
+                                              ↓
+                                         Play Game
+                                              ↓
+                                    Backend Processes
+                                         Result
+                                              ↓
+                              Backend calls
+                         GameSettlement.settleWinner()
+                                              ↓
+                         GameVault distributes prize
+                                              ↓
+                              Winner receives payout
+5.3 Technology Stack
+Component	Technology	Notes
+Blockchain	Lisk L2 (OP Stack)	EVM compatible, low-cost transactions
+Smart Contracts	Solidity 0.8.x	Standard EVM contracts
+Token Standard	ERC20	For staking and rewards
+Frontend	React + Web3.js/Ethers.js	Web3 wallet integration
+Backend	Node.js + Express	Game settlement orchestration
+Database	PostgreSQL/MongoDB	Game history, player stats
+Real-time	WebSockets/Socket.io	Live game updates
+Deployment	Hardhat/Foundry	Contract compilation and deployment
+________________________________________
+6. Games Specification
+6.1 Game 1: Ping-Pong (Off-Chain)
+Game Type: Off-chain multiplayer
+Settlement: Backend-verified
+Core Mechanics:
+•	Two players compete in a virtual Ping-Pong match
+•	Best of 3 or single match (configurable)
+•	Real-time gameplay via WebSockets
+•	Backend tracks score and determines winner
+Win Conditions:
+•	First to X points wins (e.g., 21 points)
+•	In tournament format: First to win 2 matches
+Backend Settlement:
+•	Backend records final score
+•	Calls GameSettlement.settleWinner() with winner address
+•	Winnings distributed automatically
+Player Experience:
+•	Deposit tokens for Ping-Pong game
+•	Find opponent (matchmaking or direct challenge)
+•	Play game in real-time UI
+•	View results and receive payout within seconds
+6.2 Game 2: Poker (On-Chain Settlement, Off-Chain Logic)
+Game Type: Off-chain logic, on-chain settlement
+Settlement: Backend-verified with on-chain payouts
+Core Mechanics:
+•	Texas Hold'em poker format
+•	Multiple players (2-8 per table)
+•	Off-chain card dealing and game state management
+•	Backend verifies hand rankings and pot distribution
+Win Conditions:
+•	Last player remaining (all others fold)
+•	Best hand at showdown
+Backend Settlement:
+•	Backend manages all game logic
+•	Calculates pot distribution
+•	Determines winner(s) and prize split
+•	Calls GameSettlement.settleWinner() for each payout
+•	On-chain transaction creates immutable record
+Player Experience:
+•	Deposit tokens for Poker game
+•	Join poker table (matchmaking or create table)
+•	Receive hole cards via secure backend transmission
+•	Play rounds with other players
+•	Backend calculates and settles winnings on-chain
+•	Winner receives payout confirmed by blockchain
+Security Considerations:
+•	Card dealing must be non-deterministic and verified
+•	Player communications encrypted (WebSockets + TLS)
+•	Backend implements timeout mechanisms to prevent stuck games
+•	Player balances locked until settlement complete
+________________________________________
+7. Fee Structure & Economics
+7.1 Fee Model
+Deposit Fee:
+•	Amount: 2% of deposit amount
+•	Timing: Deducted immediately at deposit time
+•	Recipient: DAOTreasury.sol
+•	Example: Player deposits 100 tokens → 2 tokens to DAO, 98 tokens in game pot
+No Other Fees:
+•	No withdrawal fees
+•	No transaction fees (handled by Lisk L2 cost)
+•	No payout fees
+7.2 Token Economics
+Initial Token Distribution:
+•	Development phase: Minted for testing
+•	Production phase: Minted for mainnet launch
+•	Future: Mint rate determined by DAO governance
+Supply Cap: Configurable (recommend 100M tokens initially)
+Token Uses:
+•	Staking in games
+•	Future: DAO governance
+•	Future: NFT minting
+•	Future: Liquidity incentives
+________________________________________
+8. User Journeys
+8.1 New Player Journey
+1. Landing Page
+   ↓
+2. Connect Wallet (MetaMask/Ledger)
+   ↓
+3. Browse Games Dashboard
+   ↓
+4. Select Game (Ping-Pong or Poker)
+   ↓
+5. View Game Details & Rules
+   ↓
+6. Deposit Tokens
+   - Enter amount
+   - Confirm 2% fee
+   - Sign transaction
+   ↓
+7. Enter Game
+   - Find opponent/table
+   - Play game
+   ↓
+8. Receive Payout
+   - Backend settles winner
+   - On-chain transaction
+   - Funds received in wallet
+   ↓
+9. Play Again or Withdraw
+8.2 Admin Journey
+1. Admin Login
+   ↓
+2. Admin Dashboard
+   - View all games
+   - View all players
+   - Monitor treasury
+   ↓
+3. Add New Game
+   - Deploy game contract
+   - Register in GameHub
+   ↓
+4. Monitor Games
+   - View active players
+   - Check for issues
+   ↓
+5. Settle Games
+   - Backend processes results
+   - Call settlement contract
+   - Trigger payouts
+   ↓
+6. Manage Treasury
+   - View fee accumulation
+   - Prepare for governance
+________________________________________
+9. Deployment & Operations
+9.1 Deployment Process
+Phase 1: Development (Testnet)
+1.	Deploy contracts to Lisk testnet
+2.	Deploy ERC20 token
+3.	Mint test tokens
+4.	Setup DAO Treasury
+5.	Deploy frontend to testnet
+6.	Beta testing with internal users
+Phase 2: Production (Mainnet)
+1.	Security audit of smart contracts
+2.	Deploy contracts to Lisk mainnet
+3.	Deploy ERC20 token to mainnet
+4.	Mint initial production supply
+5.	Setup DAO Treasury mainnet
+6.	Deploy frontend to production
+7.	Launch public beta
+9.2 Contract Deployment Order
+1.	GameToken.sol - Deploy first (ERC20)
+2.	DAOTreasury.sol - Deploy second (receives fees)
+3.	GameVault.sol - Deploy third (references token and treasury)
+4.	GameHub.sol - Deploy fourth (game registry)
+5.	GameSettlement.sol - Deploy last (references vault and hub)
+9.3 Operations & Monitoring
+Backend Settlement Service:
+•	Node.js service running on VPS/Cloud
+•	Monitors game outcomes every 10-30 seconds
+•	Calls settlement contract with verified winner
+•	Logs all transactions
+•	Error handling and retry logic
+Monitoring & Alerts:
+•	Contract balance monitoring
+•	Failed settlement detection
+•	Player complaint triage
+•	DAO treasury tracking
+________________________________________
+10. Security Considerations
+10.1 Smart Contract Security
+Access Control:
+•	Admin-only functions protected by onlyAdmin modifier
+•	GameVault only accepts calls from authorized sources
+•	Settlement contract callable only by admin
+Token Security:
+•	Standard ERC20 with overflow protection (Solidity 0.8.x)
+•	No infinite minting
+•	Controlled supply
+Fund Safety:
+•	Separate vault contract for fund management
+•	No direct fund transfers without settlement verification
+•	DAO treasury as separate contract
+10.2 Backend Security
+Game Settlement Verification:
+•	Backend verifies game outcomes before settlement
+•	Anti-cheat mechanisms implemented
+•	Player action logging and auditing
+Communication Security:
+•	HTTPS/TLS for all API calls
+•	WebSocket secure (WSS) for game state updates
+•	Signed messages from players
+Data Security:
+•	Database encryption at rest
+•	Regular backups
+•	Access controls on sensitive data
+10.3 Future Audits
+•	Smart contract audit recommended before mainnet launch
+•	Penetration testing of backend
+•	Security review of game logic
+________________________________________
+11. Roadmap & Milestones
+Phase 1: MVP
+•	✅ Smart contracts development and testing
+•	✅ Ping-Pong game backend
+•	✅ Basic frontend (game browse, deposit, play)
+•	✅ Wallet integration
+•	✅ Deployment to Lisk testnet
+Phase 2: Enhancement
+•	✅ Poker game implementation
+•	✅ Admin panel
+•	✅ Game history and stats
+•	✅ Security audit
+•	✅ Mainnet deployment
+Phase 3: Growth
+•	⏳ Additional games (TBD)
+•	⏳ Leaderboard system
+•	⏳ Seasonal tournaments
+•	⏳ Community features
+Phase 4: Advanced Features
+•	⏳ NFT integration
+•	⏳ DAO governance
+•	⏳ Staking rewards
+•	⏳ Liquidity pools
+________________________________________
+12. Success Metrics & KPIs
+12.1 User Metrics
+•	Monthly Active Users (MAU): Target 1,000+ by month 3
+•	Total Value Staked: Track TVL across all games
+•	Average Game Duration: Optimize for engagement
+•	Retention Rate: Target 40%+ weekly retention
+12.2 Financial Metrics
+•	Total Fees Collected: Track DAO treasury growth
+•	Game Volume: Total stakes per game
+•	Average Stake Size: Monitor player bet patterns
+12.3 Technical Metrics
+•	Smart Contract Gas Usage: Optimize for cost
+•	Settlement Success Rate: Target 99.9%+
+•	Platform Uptime: Target 99.5%+
+________________________________________
+13. Risk Analysis & Mitigation
+Risk	Impact	Probability	Mitigation
+Smart contract bug	High	Medium	Audits, extensive testing, staged rollout
+Player cheat/fraud	Medium	Medium	Backend verification, action logging, disputes
+Backend downtime	High	Low	Redundancy, monitoring, failover systems
+Low adoption	High	Medium	Marketing, partnerships, game quality
+Regulatory issues	High	Low	Legal review, geographic restrictions
+Liquidity issues	Medium	Low	Reserved treasury, liquidity pools
+________________________________________
+14. Future Considerations
+14.1 Phase 2+ Features
+•	Tournaments: Multi-player brackets with tiered prizes
+•	Seasonal Passes: Battle pass style progression
+•	Marketplace: Trade game-related NFTs
+•	Social Features: Guilds, friendships, chat
+•	Mobile App: iOS/Android native apps
+•	Cross-chain: Bridge to other L2s or L1
+14.2 Governance
+•	DAO Treasury: Gradual transition to governance
+•	Token Holders: Vote on game additions, fee changes
+•	Community Events: Player-organized tournaments
+14.3 Scalability
+•	Higher Player Counts: Sharded game tables
+•	More Games: Modular game contracts
+•	Analytics: Advanced player metrics and insights
+________________________________________
+15. Glossary & Definitions
+Term	Definition
+L2	Layer 2 blockchain, scaling solution on top of Ethereum
+EVM	Ethereum Virtual Machine, compatible with Ethereum contracts
+DAO	Decentralized Autonomous Organization, governed by token holders
+Settlement	Final determination of game outcome and payout distribution
+TVL	Total Value Locked, sum of all staked tokens
+ERC20	Standard for fungible tokens on EVM blockchains
+Admin	You, the platform owner with special privileges
+Treasury	DAO contract holding accumulated fees
+________________________________________
+16. Appendices
+Appendix A: Smart Contract Interfaces
+interface IGameHub {
+    function addGame(address gameAddress, string calldata gameName) external;
+    function getGames() external view returns (address[]);
+}
+
+interface IGameVault {
+    function deposit(address gameAddress, uint256 amount) external;
+    function settleGame(address gameAddress, address winner, uint256 amount) external;
+}
+
+interface IGameSettlement {
+    function settleWinner(address gameAddress, address winner, uint256 prizeAmount) external;
+}
+
+interface IDAOTreasury {
+    function depositFee(uint256 amount) external;
+    function getTreasuryBalance() external view returns (uint256);
+}
+Appendix B: Event Logging
+All key contract actions emit events for frontend tracking:
+•	PlayerDeposited(address player, address game, uint256 amount)
+•	FeeCollected(uint256 amount, address game)
+•	WinnerSettled(address player, address game, uint256 amount)
+•	GameRemoved(address gameAddress)
+

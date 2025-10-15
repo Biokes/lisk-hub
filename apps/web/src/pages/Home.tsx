@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { GameGrid } from "@/components/GameGrid";
 import { StakingDialog } from "@/components/StakingDialog";
@@ -132,18 +131,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header
-        walletAddress={walletAddress}
-        walletBalance={walletBalance}
-        onWalletConnect={handleWalletConnect}
-      />
-      
       {!walletAddress && <HeroSection onGetStarted={handleGetStarted} />}
-      
       <div data-testid="games-section">
         <GameGrid games={mockGames} onPlayGame={handlePlayGame} />
       </div>
-
       <StakingDialog
         game={selectedGame}
         open={showStaking}
@@ -151,7 +142,6 @@ export default function Home() {
         walletBalance={walletBalance}
         onConfirmStake={handleConfirmStake}
       />
-
       <WinnerDialog
         result={gameResult}
         open={showWinner}
