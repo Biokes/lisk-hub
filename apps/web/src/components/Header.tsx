@@ -2,13 +2,7 @@ import { WalletButton } from "./WalletButton";
 import { Gamepad2 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
-interface HeaderProps {
-  walletAddress?: string;
-  walletBalance?: number;
-  onWalletConnect?: (address: string) => void;
-}
-
-export function Header({ walletAddress, walletBalance, onWalletConnect }: HeaderProps) {
+export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -24,11 +18,7 @@ export function Header({ walletAddress, walletBalance, onWalletConnect }: Header
         
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <WalletButton
-            address={walletAddress}
-            balance={walletBalance}
-            onConnect={onWalletConnect}
-          />
+          <WalletButton />
         </div>
       </div>
     </header>

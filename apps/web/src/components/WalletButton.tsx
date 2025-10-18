@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Wallet, ChevronDown, ExternalLink, LogOut } from "lucide-react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { useDisconnect } from "wagmi";
+import { useDisconnect, useAccount, useBalance } from "wagmi";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,23 +12,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { liskSepolia } from "@/wallet/wagmi";
 
-interface WalletButtonProps {
-  address?: string;
-  balance?: number;
-  onConnect?: (address: string) => void;
-}
-
-export function WalletButton({ address, balance, onConnect }: WalletButtonProps) {
-  const [showDialog, setShowDialog] = useState(false);
+export function WalletButton() {
   const { openConnectModal } = useConnectModal();
   const { disconnect } = useDisconnect();
+  const { address } = useAccount();
+  const { data: balance } = useBalance({ address });
 
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
   if (address) {
-    const balanceLabel = typeof balance === "number" ? balance.toFixed(4) : "0.0000";
+    const balanceLabel = balance ? Number(balance.formatted).toFixed(4) : "0.0000";
     const explorerUrl = `${liskSepolia.blockExplorers?.default.url}/address/${address}`;
     return (
       <DropdownMenu>
@@ -68,17 +62,13 @@ export function WalletButton({ address, balance, onConnect }: WalletButtonProps)
   }
 
   return (
-    <>
-      <Button
-        onClick={() => (openConnectModal ? openConnectModal() : setShowDialog(true))}
-        className="gap-2 rounded-full h-9 px-4 bg-primary text-primary-foreground hover:opacity-90"
-        data-testid="button-connect-wallet"
-      >
-        <Wallet className="h-4 w-4" />
-        <span className="font-medium">Connect Wallet</span>
-      </Button>
-      {/* Fallback to legacy dialog if RainbowKit modal is unavailable */}
-      {showDialog && null}
-    </>
+    <Button
+      onClick={() => openConnectModal?.()}
+      className="gap-2 rounded-full h-9 px-4 bg-primary text-primary-foreground hover:opacity-90"
+      data-testid="button-connect-wallet"
+    >
+      <Wallet className="h-4 w-4" />
+      <span className="font-medium">Connect Wallet</span>
+    </Button>
   );
 }
