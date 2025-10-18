@@ -1,4 +1,5 @@
 import { WalletButton } from "./WalletButton";
+import { NetworkIndicator } from "./NetworkIndicator";
 import { Gamepad2 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -17,6 +18,7 @@ export function Header() {
         </div>
         
         <div className="flex items-center gap-3">
+          <NetworkIndicator />
           <ThemeToggle />
           <WalletButton />
         </div>

@@ -1,26 +1,22 @@
-// Game configuration constants - Fixed deposits for fairness
+// Game configuration constants - hardcoded for frontend
 export const GAME_ADDRESSES = [
   {
-    id: '0x1234567890123456789012345678901234567890',
-    name: 'Rock Paper Scissors',
-    description: 'Classic rock paper scissors game with crypto rewards',
-    fixedDeposit: '0.1'
+    id: 'ping-pong',
+    name: 'Ping Pong',
+    description: 'Classic table tennis game with competitive gameplay',
+    minDeposit: '0.01',
+    maxDeposit: '1.0'
   },
   {
-    id: '0x2345678901234567890123456789012345678901',
-    name: 'Coin Flip',
-    description: 'Simple coin flip game with instant results',
-    fixedDeposit: '0.05'
-  },
-  {
-    id: '0x3456789012345678901234567890123456789012',
-    name: 'Dice Roll',
-    description: 'Roll the dice and win big prizes',
-    fixedDeposit: '0.2'
+    id: 'poker',
+    name: 'Poker',
+    description: 'Traditional poker game with strategic betting',
+    minDeposit: '0.05',
+    maxDeposit: '5.0'
   }
 ] as const;
 
-// Contract addresses
+// Contract addresses - now sourced from contracts.ts
 export const CONTRACT_ADDRESSES = {
   gameToken: '0x5517fAa4744C9ca45aCE49964A1e4a347CBb5eaD',
   daoTreasury: '0x134d9021847517b79Ea3817bD560Cf39bc80A99A',

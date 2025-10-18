@@ -72,7 +72,7 @@ export function GameCard({ game, onPlay }: GameCardProps) {
                 Stake Range
               </p>
               <p className="text-base font-display font-semibold text-foreground">
-                {game.minStake} - {game.maxStake} ETH
+                {game.minStake} - {game.maxStake} GAME
               </p>
             </div>
           </div>
@@ -82,7 +82,7 @@ export function GameCard({ game, onPlay }: GameCardProps) {
           <div className="p-3 rounded-lg bg-chart-3/10 border border-chart-3/20">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-chart-3">Your Balance:</span>
-              <span className="font-mono font-semibold text-chart-3">{gameBalance.toFixed(4)} ETH</span>
+              <span className="font-mono font-semibold text-chart-3">{gameBalance.toFixed(4)} GAME</span>
             </div>
           </div>
         )}
