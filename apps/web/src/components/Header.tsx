@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ walletAddress, walletBalance, onWalletConnect }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="relative">
