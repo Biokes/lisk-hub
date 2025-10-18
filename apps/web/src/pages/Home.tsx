@@ -12,7 +12,7 @@ export default function Home() {
   const [showWinner, setShowWinner] = useState(false);
   const [gameResult, setGameResult] = useState<GameResult | null>(null);
 
-  const games: Game[] = GAME_ADDRESSES.map(game => ({
+  const games: Game[] = GAME_ADDRESSES.map((game: typeof GAME_ADDRESSES[number]) => ({
     id: game.id,
     name: game.name,
     description: game.description,

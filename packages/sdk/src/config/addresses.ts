@@ -9,3 +9,26 @@ export const CONTRACT_ADDRESSES = {
 } as const
 
 export type NetworkName = keyof typeof CONTRACT_ADDRESSES
+
+export const GAME_TOKEN_ADDRESS = CONTRACT_ADDRESSES.liskSepolia.gameToken
+export const DAO_TREASURY_ADDRESS = CONTRACT_ADDRESSES.liskSepolia.daoTreasury
+export const GAME_HUB_ADDRESS = CONTRACT_ADDRESSES.liskSepolia.gameHub
+export const GAME_VAULT_ADDRESS = CONTRACT_ADDRESSES.liskSepolia.gameVault
+export const GAME_SETTLEMENT_ADDRESS = CONTRACT_ADDRESSES.liskSepolia.gameSettlement
+
+export const GAME_ADDRESSES = [
+  {
+    id: 'ping-pong',
+    name: 'Ping Pong',
+    description: 'Classic table tennis game with competitive gameplay',
+    minDeposit: '0.01',
+    maxDeposit: '1.0'
+  },
+  {
+    id: 'poker',
+    name: 'Poker',
+    description: 'Traditional poker game with strategic betting',
+    minDeposit: '0.05',
+    maxDeposit: '5.0'
+  }
+] as const
