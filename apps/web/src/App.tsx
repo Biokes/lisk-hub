@@ -1,35 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Switch, Route } from "wouter";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import NetworkGuard from "@/components/NetworkGuard";
+import { Header } from "@/components/Header";
+import { WinnerDialog } from "@/components/WinnerDialog";
+import { useWinnerEvents } from "@/hooks/use-winner-events";
+import { useAccount } from "wagmi";
+import Home from "@/pages/Home";
+import NotFound from "@/pages/not-found";
+import type { GameResult } from "@shared/schema";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function Router() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route component={NotFound} />
+    </Switch>
+  );
 }
 
-export default App
+function App() {
+  const { address } = useAccount();
+  const [showWinner, setShowWinner] = useState(false);
+  const [gameResult, setGameResult] = useState<GameResult | null>(null);
+
+  useWinnerEvents({
+    onWinner: (event) => {
+      if (address && event.winner.toLowerCase() === address.toLowerCase()) {
+        const result: GameResult = {
+          gameId: event.gameId,
+          winner: event.winner,
+          prize: Number(event.prize) / 1e18,
+          platformFee: Number(event.prize) / 1e18 * 0.1,
+          timestamp: new Date(event.timestamp * 1000).toISOString(),
+        };
+        setGameResult(result);
+        setShowWinner(true);
+      }
+    },
+  });
+
+  const handleClaimRewards = () => {
+    if (gameResult) {
+      console.log("Rewards claimed");
+    }
+  };
+
+  return (
+    <TooltipProvider>
+      <Header />
+      <Toaster />
+      <NetworkGuard>
+        <Router />
+      </NetworkGuard>
+      <WinnerDialog
+        result={gameResult}
+        open={showWinner}
+        onOpenChange={setShowWinner}
+        onClaim={handleClaimRewards}
+      />
+    </TooltipProvider>
+  );
+}
+
+export default App;
