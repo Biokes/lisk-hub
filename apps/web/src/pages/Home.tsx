@@ -9,10 +9,11 @@ export default function Home() {
   const games: Game[] = [
     {
       name: "PingPong",
-      description: "A two player game like Tennis",
+      description: "A two player game like Tennis, where this is just a dummy data for or what dou think is happening inside of it",
       playerCount: 120,
       imageUrl: '/pongIt.png',
-      route: '/'
+      route: '/',
+      isReady:true
     }
   ]
 

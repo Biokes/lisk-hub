@@ -5,7 +5,8 @@ export const gameSchema = z.object({
   description: z.string(),
   playerCount: z.number(),
   imageUrl: z.string(),
-  route: z.string()
+  route: z.string(),
+  isReady: z.boolean()
 });
 
 export const walletSchema = z.object({
