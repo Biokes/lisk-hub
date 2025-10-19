@@ -12,7 +12,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden py-12 md:py-32 min-h-screen md:min-h-screen flex items-center justify-center">
       
-      {/* Video Background with Opacity */}
+      
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video
           src={gamer}
@@ -22,11 +22,11 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Overlay with opacity */}
+        
         <div className="absolute inset-0 bg-black/60 dark:bg-black/70" />
       </div>
 
-      {/* Grid Pattern Overlay */}
+      
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
 
       {/* Glow Effects */}
