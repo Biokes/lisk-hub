@@ -1,14 +1,12 @@
 import { z } from "zod";
 
 export const gameSchema = z.object({
-  id: z.string(),
   name: z.string(),
   description: z.string(),
-  minStake: z.number(),
-  maxStake: z.number(),
   playerCount: z.number(),
-  category: z.string(),
   imageUrl: z.string(),
+  route: z.string(),
+  isReady: z.boolean()
 });
 
 export const walletSchema = z.object({

@@ -1,0 +1,20 @@
+
+.home {
+  background-image: radial-gradient(
+      circle at top center,
+    rgba(9, 9, 9, 0.9) 50%,
+    rgba(45, 45, 45, 0.4) 90%
+  ),
+  url("/landing.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+}
+.connectText{
+  @apply text-nowrap;
+  font-family: "UnifrakturCook", cursive;
+    font-style: normal;
+}
+.availableGame{
+  
+}
