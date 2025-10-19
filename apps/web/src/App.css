@@ -1,0 +1,11 @@
+
+.home {
+  background-image: linear-gradient(
+    rgba(9, 9, 9, 0.7) 50%,
+    rgba(45, 45, 45, 0.4) 67%
+  ),
+  url("/public/landing.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+}

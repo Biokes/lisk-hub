@@ -50,16 +50,11 @@ function App() {
   return (
     <TooltipProvider>
       <Header />
-      <Toaster />
       <NetworkGuard>
         <Router />
       </NetworkGuard>
-      <WinnerDialog
-        result={gameResult}
-        open={showWinner}
-        onOpenChange={setShowWinner}
-        onClaim={handleClaimRewards}
-      />
+      <WinnerDialog result={gameResult} open={showWinner} onOpenChange={setShowWinner}onClaim={handleClaimRewards}/>
+      <Toaster />
     </TooltipProvider>
   );
 }

@@ -46,20 +46,7 @@ const getNetworkName = (chainId: number): string => {
     1001: 'Klaytn Baobab',
     108: 'ThunderCore Mainnet',
     18: 'ThunderCore Testnet',
-    128: 'Heco Mainnet',
-    256: 'Heco Testnet',
-    66: 'OKC Mainnet',
-    65: 'OKC Testnet',
-    1666600000: 'Harmony Mainnet',
-    1666700000: 'Harmony Testnet',
-    30: 'RSK Mainnet',
-    31: 'RSK Testnet',
-    8217: 'Klaytn Mainnet',
-    1001: 'Klaytn Baobab',
-    108: 'ThunderCore Mainnet',
-    18: 'ThunderCore Testnet',
   }
-  
   return networkMap[chainId] || `Chain ID: ${chainId}`
 }
 
@@ -68,7 +55,6 @@ export default function NetworkGuard({ children }: { children: React.ReactNode }
   const { switchChain, isPending, error: switchError } = useSwitchChain()
   const { isConnected } = useAccount()
 
-  // Show network guard if connected and on wrong network
   if (isConnected && chainId && chainId !== LISK_SEPOLIA_CHAIN_ID) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">

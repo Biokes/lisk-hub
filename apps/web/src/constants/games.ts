@@ -1,4 +1,3 @@
-// Game configuration constants - hardcoded for frontend
 export const GAME_ADDRESSES = [
   {
     id: 'ping-pong',
@@ -16,7 +15,6 @@ export const GAME_ADDRESSES = [
   }
 ] as const;
 
-// Contract addresses - now sourced from contracts.ts
 export const CONTRACT_ADDRESSES = {
   gameToken: '0x5517fAa4744C9ca45aCE49964A1e4a347CBb5eaD',
   daoTreasury: '0x134d9021847517b79Ea3817bD560Cf39bc80A99A',

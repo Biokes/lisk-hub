@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Coins, Shield, Zap } from "lucide-react";
 import gamer from '../assets/games.mp4';
@@ -10,42 +8,28 @@ interface HeroSectionProps {
 
 export function HeroSection({ onGetStarted }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden py-12 md:py-32 min-h-screen md:min-h-screen flex items-center justify-center">
-      
-      
-      <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <video
-          src={gamer}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        
+    <section className="relative overflow-hidden py-12 md:py-32 min-h-screen md:min-h-screen flex items-center justify-center home">
+      {/* <div className="absolute inset-0 w-full h-full overflow-hidden">
+        <video src={gamer} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover"/>
         <div className="absolute inset-0 bg-black/60 dark:bg-black/70" />
-      </div>
+      </div> */}
 
       
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
 
-      {/* Glow Effects */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-30 -translate-y-1/2 animate-float pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl opacity-30 translate-y-1/2 animate-float pointer-events-none" style={{ animationDelay: "0.5s" }} />
 
-      {/* Content */}
       <div className="container mx-auto px-4 relative z-20 w-full">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-10">
           
-          {/* Title */}
           <div className="space-y-4 md:space-y-6 animate-fade-in">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-tight drop-shadow-lg">
-              <span className="inline-block animate-slide-in-left">Stake.</span>
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-tight drop-shadow-lg connectText">
+              <span className="inline-block animate-slide-in-left">Connect.</span>
               <span className="inline-block animate-slide-in-left" style={{ animationDelay: "0.2s" }}>Play.</span>
               <span className="inline-block animate-slide-in-left" style={{ animationDelay: "0.4s" }}>Win.</span>
             </h1>
 
-            {/* Description */}
             <p className="text-sm sm:text-base md:text-base lg:text-base text-slate-100 max-w-2xl mx-auto leading-relaxed drop-shadow-md animate-fade-in px-2" style={{ animationDelay: "0.5s" }}>
               The ultimate blockchain gaming hub where skill meets stake. Connect your wallet and compete for real rewards.
             </p>
@@ -99,17 +83,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
   );
 }
 
-function FeatureCard({ 
-  icon: Icon, 
-  title, 
-  description, 
-  delay 
-}: { 
-  icon: any
-  title: string
-  description: string
-  delay: number 
-}) {
+function FeatureCard({ icon: Icon, title, description, delay }: { icon: any,title: string,description: string,delay: number }) {
   return (
     <div
       className="p-4 sm:p-6 rounded-lg sm:rounded-xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl hover:border-primary/50 hover:bg-white/15 transition-all duration-300 group cursor-pointer animate-fade-in h-full"

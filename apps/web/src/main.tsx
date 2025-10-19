@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import "./App.css";
 import { WagmiProvider } from "wagmi";
 import { makeConfig, liskSepolia } from "./wallet/wagmi";
 import { QueryClientProvider } from "@tanstack/react-query";

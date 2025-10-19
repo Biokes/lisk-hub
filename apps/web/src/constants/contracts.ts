@@ -13,7 +13,6 @@ export const CONTRACT_ADDRESSES = {
   gameSettlement: GAME_SETTLEMENT_ADDRESS
 } as const;
 
-// Contract ABIs - hardcoded for frontend
 export const GAME_VAULT_ABI = [
   {
     "inputs": [

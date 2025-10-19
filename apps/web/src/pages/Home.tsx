@@ -64,18 +64,8 @@ export default function Home() {
       <div data-testid="games-section">
         <GameGrid games={games} onPlayGame={handlePlayGame} />
       </div>
-      <StakingDialog
-        game={selectedGame}
-        open={showStaking}
-        onOpenChange={setShowStaking}
-        onConfirmStake={handleConfirmStake}
-      />
-      <WinnerDialog
-        result={gameResult}
-        open={showWinner}
-        onOpenChange={setShowWinner}
-        onClaim={handleClaimRewards}
-      />
+      <StakingDialog game={selectedGame} open={showStaking} onOpenChange={setShowStaking} onConfirmStake={handleConfirmStake}/>
+      <WinnerDialog result={gameResult} open={showWinner} onOpenChange={setShowWinner} onClaim={handleClaimRewards}/>
     </div>
   );
 }
