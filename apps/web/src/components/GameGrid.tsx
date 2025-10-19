@@ -3,7 +3,7 @@ import type { Game } from "@shared/schema";
 
 interface GameGridProps {
   games: Game[];
-  onPlayGame?: (gameId: string) => void;
+  onPlayGame: (gameId: string) => void;
 }
 
 export function GameGrid({ games, onPlayGame }: GameGridProps) {
@@ -21,8 +21,8 @@ export function GameGrid({ games, onPlayGame }: GameGridProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {games.map((game, index) => (
-            <div key={game.id} className="animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
-              <GameCard game={game} onPlay={onPlayGame} />
+            <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              <GameCard game={game} onPlay={()=>onPlayGame(game.route)} />
             </div>
           ))}
         </div>

@@ -5,9 +5,17 @@ import { useLocation } from "wouter";
 
 
 export default function Home() {
-  const [, navigate] = useLocation(); 
-  const games: Game[] = []
-  
+  const [, navigate] = useLocation();
+  const games: Game[] = [
+    {
+      name: "PingPong",
+      description: "A two player game like Tennis",
+      playerCount: 120,
+      imageUrl: '/pongIt.png',
+      route: '/'
+    }
+  ]
+
   const handlePlayGame = (gameRoute: string) => {
     navigate(`/${gameRoute}`);
   };
