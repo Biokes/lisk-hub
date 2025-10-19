@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
+      "@sdk": path.resolve(import.meta.dirname, "../../packages/sdk/src"),
     },
   },
   root: path.resolve(import.meta.dirname),

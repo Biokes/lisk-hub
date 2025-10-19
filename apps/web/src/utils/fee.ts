@@ -1,3 +1,4 @@
+// Fee calculation utility - hardcoded for frontend
 export function calculateFee(
   amount: bigint,
   feePercentage: number = 2
