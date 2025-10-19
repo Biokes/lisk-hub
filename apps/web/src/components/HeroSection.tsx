@@ -39,7 +39,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
           
           {/* Title */}
           <div className="space-y-4 md:space-y-6 animate-fade-in">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-semi-bold text-white leading-tight drop-shadow-lg">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-tight drop-shadow-lg">
               <span className="inline-block animate-slide-in-left">Stake.</span>
               <span className="inline-block animate-slide-in-left" style={{ animationDelay: "0.2s" }}>Play.</span>
               <span className="inline-block animate-slide-in-left" style={{ animationDelay: "0.4s" }}>Win.</span>
