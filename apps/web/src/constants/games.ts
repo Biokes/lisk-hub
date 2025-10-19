@@ -4,15 +4,13 @@ export const GAME_ADDRESSES = [
     id: 'ping-pong',
     name: 'Ping Pong',
     description: 'Classic table tennis game with competitive gameplay',
-    minDeposit: '0.01',
-    maxDeposit: '1.0'
+    stake: '0.01'
   },
   {
     id: 'poker',
     name: 'Poker',
     description: 'Traditional poker game with strategic betting',
-    minDeposit: '0.05',
-    maxDeposit: '5.0'
+    stake: '0.05'
   }
 ] as const;
 

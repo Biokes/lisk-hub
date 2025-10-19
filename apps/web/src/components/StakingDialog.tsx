@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Coins, AlertCircle } from "lucide-react";
-import { useAccount, useBalance, useWriteContract, useReadContract, useSimulateContract, useEstimateGas } from "wagmi";
+import { useAccount, useBalance, useWriteContract, useReadContract, useSimulateContract } from "wagmi";
 import { useToast } from "@/hooks/use-toast";
 import { GAME_TOKEN_ADDRESS, GAME_VAULT_ADDRESS, GAME_VAULT_ABI } from "@/constants/contracts";
 import { calculateFee } from "@/utils/fee";
@@ -51,7 +51,7 @@ export function StakingDialog({
   const { writeContract } = useWriteContract();
   const { toast } = useToast();
 
-  const fixedDeposit = game ? parseFloat(game.minStake.toString()) : 0;
+  const fixedDeposit = game ? parseFloat(game.stake.toString()) : 0;
   const depositAmountBigInt = BigInt(Math.floor(fixedDeposit * 1e18));
   const { fee, net } = calculateFee(depositAmountBigInt, 2);
 
@@ -86,14 +86,6 @@ export function StakingDialog({
     },
   });
 
-  const { data: gasEstimate } = useEstimateGas({
-    to: GAME_VAULT_ADDRESS as `0x${string}`,
-    data: stakeSimulation?.request?.data,
-    query: {
-      enabled: !!stakeSimulation?.request?.data,
-    },
-  });
-
   const { data: allowance } = useReadContract({
     address: GAME_TOKEN_ADDRESS as `0x${string}`,
     abi: [
@@ -120,8 +112,7 @@ export function StakingDialog({
   const hasEnoughAllowance = allowance && depositAmountBigInt ? allowance >= depositAmountBigInt : false;
   
   const ethBalanceWei = ethBalance?.value || BigInt(0);
-  const gasEstimateWei = gasEstimate || BigInt(0);
-  const hasEnoughEth = ethBalanceWei >= gasEstimateWei;
+  const hasEnoughEthForGas = ethBalanceWei > BigInt(0);
   
   const getErrorMessage = (error: any): string => {
     if (!error) return "Unknown error occurred";
@@ -154,7 +145,7 @@ export function StakingDialog({
   };
 
   const canApprove = !hasEnoughAllowance && !approvalError && approvalSimulation;
-  const canStake = hasEnoughAllowance && !stakeError && stakeSimulation && hasEnoughEth;
+  const canStake = hasEnoughAllowance && !stakeError && stakeSimulation && hasEnoughEthForGas;
   const hasSimulationErrors = approvalError || stakeError;
 
   const validateTransaction = (): { isValid: boolean; error?: string } => {
@@ -174,7 +165,7 @@ export function StakingDialog({
       return { isValid: false, error: "Insufficient token balance" };
     }
     
-    if (!hasEnoughEth) {
+    if (!hasEnoughEthForGas) {
       return { isValid: false, error: "Insufficient ETH for gas fees" };
     }
     
@@ -259,7 +250,7 @@ export function StakingDialog({
       
       toast({
         title: "Stake successful!",
-        description: `Successfully staked ${fixedDeposit} tokens`,
+        description: `Successfully staked ${fixedDeposit} GAME tokens`,
       });
       
       onConfirmStake?.(game.id, fixedDeposit);
@@ -282,7 +273,7 @@ export function StakingDialog({
         <DialogHeader>
           <DialogTitle className="text-2xl font-display">{game.name}</DialogTitle>
           <DialogDescription>
-            Enter the game with a fixed deposit amount
+            Join this game by staking the required amount of game tokens (ETH only needed for gas fees)
           </DialogDescription>
         </DialogHeader>
 
@@ -290,17 +281,8 @@ export function StakingDialog({
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm text-muted-foreground font-mono">
               <span>Token Balance: {walletTokenBalance.toFixed(4)} GAME</span>
-              <span>Fixed Deposit: {fixedDeposit.toFixed(4)} GAME</span>
+              <span>Required Stake: {fixedDeposit.toFixed(4)} GAME</span>
             </div>
-            
-            {gasEstimate && (
-              <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
-                <span>Estimated Gas: {(Number(gasEstimate) / 1e18).toFixed(6)} ETH</span>
-                <span className={hasEnoughEth ? "text-green-600" : "text-red-600"}>
-                  {hasEnoughEth ? "✓ Sufficient ETH" : "✗ Insufficient ETH"}
-                </span>
-              </div>
-            )}
             
             {hasSimulationErrors && (
               <div className="text-xs text-red-600 font-mono">
@@ -311,9 +293,9 @@ export function StakingDialog({
 
           <div className="p-4 rounded-lg border bg-card">
             <div className="text-center space-y-2">
-              <p className="text-sm text-muted-foreground">Required Deposit</p>
+              <p className="text-sm text-muted-foreground">Required Stake</p>
               <p className="text-2xl font-display font-bold text-primary">{fixedDeposit.toFixed(4)} GAME</p>
-              <p className="text-xs text-muted-foreground">Fixed amount for fairness</p>
+              <p className="text-xs text-muted-foreground">Fixed amount for fair gameplay</p>
             </div>
           </div>
 
@@ -328,7 +310,7 @@ export function StakingDialog({
             <Card className="p-3 space-y-1">
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <AlertCircle className="h-3 w-3" />
-                Net Deposit
+                Net Stake
               </div>
               <p className="font-mono font-semibold text-chart-3">{netDeposit.toFixed(4)} GAME</p>
             </Card>
@@ -346,7 +328,7 @@ export function StakingDialog({
               const validation = validateTransaction();
               if (!validation.isValid) {
                 if (validation.error?.includes("balance")) return "Insufficient balance";
-                if (validation.error?.includes("ETH")) return "Insufficient ETH";
+                if (validation.error?.includes("ETH")) return "Need ETH for gas";
                 if (validation.error?.includes("simulation")) return "Transaction will fail";
                 return "Cannot proceed";
               }

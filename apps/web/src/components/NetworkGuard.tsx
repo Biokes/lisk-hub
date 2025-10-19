@@ -5,64 +5,6 @@ import { liskSepolia } from '@/wallet/wagmi'
 
 const LISK_SEPOLIA_CHAIN_ID = 4202
 
-const getNetworkName = (chainId: number): string => {
-  const networkMap: Record<number, string> = {
-    1: 'Ethereum Mainnet',
-    11155111: 'Ethereum Sepolia',
-    42220: 'Celo Mainnet',
-    44787: 'Celo Alfajores Testnet',
-    137: 'Polygon Mainnet',
-    80001: 'Polygon Mumbai',
-    56: 'BSC Mainnet',
-    97: 'BSC Testnet',
-    250: 'Fantom Opera',
-    4002: 'Fantom Testnet',
-    42161: 'Arbitrum One',
-    421614: 'Arbitrum Sepolia',
-    10: 'Optimism',
-    420: 'Optimism Sepolia',
-    8453: 'Base Mainnet',
-    84532: 'Base Sepolia',
-    43114: 'Avalanche C-Chain',
-    43113: 'Avalanche Fuji',
-    25: 'Cronos Mainnet',
-    338: 'Cronos Testnet',
-    100: 'Gnosis Chain',
-    10200: 'Gnosis Chiado',
-    1284: 'Moonbeam',
-    1287: 'Moonbase Alpha',
-    1285: 'Moonriver',
-    592: 'Astar',
-    336: 'Shibuya',
-    128: 'Heco Mainnet',
-    256: 'Heco Testnet',
-    66: 'OKC Mainnet',
-    65: 'OKC Testnet',
-    1666600000: 'Harmony Mainnet',
-    1666700000: 'Harmony Testnet',
-    30: 'RSK Mainnet',
-    31: 'RSK Testnet',
-    8217: 'Klaytn Mainnet',
-    1001: 'Klaytn Baobab',
-    108: 'ThunderCore Mainnet',
-    18: 'ThunderCore Testnet',
-    128: 'Heco Mainnet',
-    256: 'Heco Testnet',
-    66: 'OKC Mainnet',
-    65: 'OKC Testnet',
-    1666600000: 'Harmony Mainnet',
-    1666700000: 'Harmony Testnet',
-    30: 'RSK Mainnet',
-    31: 'RSK Testnet',
-    8217: 'Klaytn Mainnet',
-    1001: 'Klaytn Baobab',
-    108: 'ThunderCore Mainnet',
-    18: 'ThunderCore Testnet',
-  }
-  
-  return networkMap[chainId] || `Chain ID: ${chainId}`
-}
-
 export default function NetworkGuard({ children }: { children: React.ReactNode }) {
   const chainId = useChainId()
   const { switchChain, isPending, error: switchError } = useSwitchChain()
@@ -91,7 +33,7 @@ export default function NetworkGuard({ children }: { children: React.ReactNode }
               <div className="p-4 rounded-lg bg-muted/50">
                 <p className="text-sm text-muted-foreground mb-2">Current Network:</p>
                 <p className="font-mono text-sm font-semibold text-destructive">
-                  {getNetworkName(chainId)}
+                  Chain ID: {chainId}
                 </p>
               </div>
 
@@ -134,7 +76,7 @@ export default function NetworkGuard({ children }: { children: React.ReactNode }
     )
   }
 
-  return <>{children}</>
+  return <div key={chainId}>{children}</div>
 }
 
 
