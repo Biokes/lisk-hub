@@ -363,11 +363,39 @@
     }
   }
 
-  .word-animate {
-    display: inline-block;
-    animation: fadeInUpContinuous 9s ease-in-out infinite;
-    margin-right: 0.15em;
-    font-weight: 700;
+  @keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+
+.word-animate {
+  display: inline-block;
+  animation: fadeInUpContinuous 9s ease-in-out infinite;
+  margin-right: 0.15em;
+  font-weight: 700;
     letter-spacing: -0.02em;
   }
 
