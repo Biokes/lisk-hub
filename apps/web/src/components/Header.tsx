@@ -19,9 +19,9 @@ export function Header() {
         </div>
         
         <div className="flex items-center gap-3">
-          <NetworkIndicator />
+          {/* <NetworkIndicator /> */}
           <ThemeToggle />
-          <WalletButton />
+          {/* <WalletButton /> */}
         </div>
       </div>
     </header>
