@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Users, ArrowRight } from "lucide-react";
 import type { Game } from "@shared/schema";
+import { toast } from "@/hooks/use-toast";
 
 interface GameCardProps {
   game: Game;
@@ -35,13 +36,21 @@ export function GameCard({ game, onPlay }: GameCardProps) {
           <h3 className="text-xl font-display font-semibold text-foreground tracking-tight"          >
             {game.name}
           </h3>
-          <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+          <p className="text-sm text-muted-foreground line-clamp-1 leading-relaxed">
             {game.description}
           </p>
         </div>
         <div className="h-px bg-gradient-to-r from-card-border/0 via-card-border/50 to-card-border/0" />
 
-        <Button onClick={() => onPlay(game.route)}
+        <Button onClick={() => {
+          game.isReady?
+            onPlay(game.route)
+            :
+            toast({
+              title:"",
+              description: 'Not available yet, Coming soon',
+            })
+        }}
           className={"w-full font-semibold py-5 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary/85 text-primary-foreground shadow-sm hover:shadow-md transition-all duration-300 group/btn mt-2"}
         >
           <span>Play Now</span>

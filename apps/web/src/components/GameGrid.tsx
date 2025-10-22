@@ -2,6 +2,7 @@ import { GameCard } from "./GameCard";
 import type { Game } from "@shared/schema";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 interface GameGridProps {
   games: Game[];
@@ -17,11 +18,11 @@ export function GameGrid({ games, onPlayGame }: GameGridProps) {
     })
   }
   return (
-    <section className="py-12">
-      <div className="container mx-auto px-4">
+    <section className="py-12 ">
+      <div className="container mx-auto px-4 ">
         <header className="flex px-2 justify-between items-center mb-8">
           <div className="">
-            <h2 className="text-lg md:text-4xl font-display font-bold mb-2 availableGame">
+            <h2 className="text-lg md:text-4xl font-display font-bold mb-2">
               Available Games
             </h2>
             <p className="text-muted-foreground text-xs -mt-[10px] md:text-[1rem] md:-mt-[5px]">

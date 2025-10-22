@@ -12,6 +12,22 @@ export default function Home() {
       imageUrl: '/pongIt.png',
       route: 'https://pong-it.vercel.app',
       isReady: true
+    },
+    {
+      name: "Texas Holdem",
+      description: "Casino poker",
+      playerCount: 120,
+      imageUrl: '/pongIt.png',
+      route: 'https://pong-it.vercel.app',
+      isReady: false
+    },
+    {
+      name: "PingPong",
+      description: "gamiit",
+      playerCount: 120,
+      imageUrl: '/pongIt.png',
+      route: 'https://pong-it.vercel.app',
+      isReady: false
     }
   ]
 

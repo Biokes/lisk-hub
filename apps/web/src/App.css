@@ -18,3 +18,18 @@
 .availableGame{
   
 }
+.gamii{
+  @apply capitalize text-[1rem];
+    font-family:"Henny Penny";
+
+}
+.availableGame{
+   background-image: linear-gradient(
+    rgba(9, 9, 9, 0.9) 50%,
+    rgba(45, 45, 45, 0.4) 90%
+  ),
+  url("/logo.png");
+    background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+}

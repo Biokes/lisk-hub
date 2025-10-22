@@ -1,6 +1,7 @@
 @import url('https://rsms.me/inter/inter.css');
 @import url('https://fonts.googleapis.com/css2?family=Sohne:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Henny+Penny&family=UnifrakturCook:wght@700&display=swap');
 
 @tailwind base;
 @tailwind components;
