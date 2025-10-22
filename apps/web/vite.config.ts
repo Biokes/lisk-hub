@@ -23,5 +23,12 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://pong-it.vercel.app',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   }
+    // }
   },
 });
