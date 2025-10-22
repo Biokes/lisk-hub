@@ -28,7 +28,7 @@ export function GameGrid({ games, onPlayGame }: GameGridProps) {
               Choose a game, connect your wallet, stake and earn.
             </p>
           </div>
-          <Button className="capitalize" onClick={handleCreateBounty}>
+          <Button className={cn("capitalize text-sm")} onClick={handleCreateBounty}>
             create Tournament
           </Button>
         </header>
