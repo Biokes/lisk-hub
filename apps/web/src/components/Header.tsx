@@ -8,7 +8,7 @@ export function Header() {
         
         <div className="flex items-center gap-1 sm:gap-2 min-w-0">
           <div className="h-[50px] w-auto overflow-hidden">
-            <img src="/public/logo.png" alt="Gamii logo" className="w-full h-full object-center"/>
+            <img src="/logo.png" alt="Gamii logo" className="w-full h-full object-center"/>
           </div>
           <h1 className="text-lg sm:text-2xl font-display font-bold text-primary truncate gamii">
             Gamii
