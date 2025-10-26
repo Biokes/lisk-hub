@@ -7,25 +7,25 @@ export default function Home() {
   const games: Game[] = [
     {
       name: "PingPong",
-      description: "A two player game like Tennis, where this is just a dummy data for or what dou think is happening inside of it",
-      playerCount: 120,
+      description:"A fast-paced two-player arcade classic inspired by table tennis. Test your reflexes and precision as you battle an opponent in real time for ultimate bragging rights.",
+      playerCount: 81,
       imageUrl: '/pongIt.png',
       route: 'https://pong-it.vercel.app',
       isReady: true
     },
     {
-      name: "Texas Holdem",
-      description: "Casino poker",
-      playerCount: 120,
-      imageUrl: '/pongIt.png',
-      route: 'https://pong-it.vercel.app',
-      isReady: false
+      name: "ZK Poker",
+      description:  "A decentralized Texas Hold’em experience where players compete with zero-knowledge proof fairness — bringing the thrill of casino poker to the blockchain.",
+      playerCount: 6,
+      imageUrl: '/ZKPoker.png',
+      route: 'https://texas-seven.vercel.app/',
+      isReady: true
     },
     {
-      name: "PingPong",
-      description: "gamiit",
+      name: "Checkers",
+      description: "The timeless strategy board game reimagined for the digital age. Outsmart your opponent and dominate the board in classic checkers style.",
       playerCount: 120,
-      imageUrl: '/pongIt.png',
+      imageUrl: '/checkers.png',
       route: 'https://pong-it.vercel.app',
       isReady: false
     }
